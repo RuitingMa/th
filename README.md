@@ -14,7 +14,7 @@ The project is organized as follows:
   - **yml** folder contains configuration files with hyperparameters
   - **main.py** represents the entry file
   - **ensemble.py** represents the implementation of the proposed ensemble, containing its test and training procedures
-  - **BENN.py** represents the ensemble voting algorithms described in the thesis treaty which were used to unify the individual the votes of the members.
+  - **BENN.py** represents the ensemble voting algorithms described in the thesis treaty which were used to unify the individual votes of the members.
 
 Please note that so far, only XNOR-LeNet and XNOR-NiN on MNIST and CIFAR-10 have been modified for integration in the ensmeble. Other model architectures have been left in the repository for integration in the future.
 ### Installation
