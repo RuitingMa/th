@@ -1,12 +1,8 @@
-# Binary Neural Networks on PyTorch 
-
-![Binarization](https://github.com/lucamocerino/Binary-Neural-Networks-PyTorch-1.0/blob/master/bin.png)
+# Ensemble-based Low Precision Inference in Software 
 
 
-This repository implements three popular papers that introduced the concept of Binary Neural Networks: 
-- [XNOR-Net: ImageNet Classification Using Binary Convolutional Neural Networks](https://arxiv.org/abs/1603.05279).
-- [Binarized Neural Networks](https://papers.nips.cc/paper/6573-binarized-neural-networks)
-- [DoReFa-Net: Training Low Bitwidth Convolutional Neural Networks with Low Bitwidth Gradients](https://arxiv.org/abs/1606.06160)
+### Description 
+Implemented based on Luca Mocerino's [Binary Neural Networks on Pytorch] (https://github.com/lucamocerino/Binary-Neural-Networks-PyTorch-1.0), this repository implements the proposed design in my Honours project.
 
 
 
@@ -17,6 +13,8 @@ The project is organized as follows:
   - **models/{type}_layers.py** contains the binarylayers implementation (binary activation, binary conv and fully-connected layers, gradient update);  where type = {bnn, xnor, dorefa}
   - **yml** folder contains configuration files with hyperparameters
   - **main.py** represents the entry file
+  - **ensemble.py** represents the implementation of the proposed ensemble, containing its test and training procedures
+  - **BENN.py** represents the ensemble voting algorithms described in the thesis treaty which were used to unify the individual the votes of the members.
 
 ### Installation
 
@@ -35,17 +33,6 @@ Network-in-Network on CIFAR10 dataset. All hyper parameters are in .yml file.
 ```sh
 $ python main.py app:yml/nin_cifar10.yml
 ```
-## Related Applications
-If you find this code useful in your research, please consider citing one of the works in this section.
-
-  - [Fast and Accurate Inference on Microcontrollers With Boosted Cooperative Convolutional Neural Networks (BC-Net)](https://ieeexplore.ieee.org/abstract/document/9275360)
-  - [CoopNet: Cooperative Convolutional Neural Network for Low-Power MCUs](https://ieeexplore.ieee.org/abstract/document/8964993)
-  - [TentacleNet: A Pseudo-Ensemble Template for Accurate Binary Convolutional Neural Networks](https://ieeexplore.ieee.org/abstract/document/9073982/)
-
-License
-----
-
-MIT
 
 
 
