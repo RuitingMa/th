@@ -1,0 +1,20 @@
+no_cuda: False
+checkpoint: "results/lenet_cifar10" 
+filename: null
+pretrained: null
+bin_type_1: "xnor"
+bin_type_2: "xnor"
+model_1: "lenet2"
+model_2: "lenet5"
+save_path: "results/lenet_cifar10" 
+dataset : "mnist"
+batch_size_1: 128 
+batch_size_2: 128
+test_batch_size: 100
+optimizer: 'adam' 
+lr: 0.01 
+gamma: 0.1 
+steps: [80, 150] 
+epochs_1: 100
+epochs_2: 100
+
