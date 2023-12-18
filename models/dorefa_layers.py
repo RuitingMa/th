@@ -1,14 +1,15 @@
 import torch
 import numpy as np
 from torch.autograd import Function
-from torch.nn import  Conv2d, Linear
+from torch.nn import Conv2d, Linear
 from torch.nn.functional import linear, conv2d
 
-__all__ = ['DOREFAConv2d','DOREFALinear']
+__all__ = ["DOREFAConv2d", "DOREFALinear"]
 
 
 class ScaleSigner(Function):
     """take a real value x, output sign(x)*E(|x|)"""
+
     @staticmethod
     def forward(ctx, input):
         return torch.sign(input) * torch.mean(torch.abs(input))
@@ -25,7 +26,7 @@ def scale_sign(input):
 class Quantizer(Function):
     @staticmethod
     def forward(ctx, input, nbit):
-        scale = 2 ** nbit - 1
+        scale = 2**nbit - 1
         return torch.round(input * scale) / scale
 
     @staticmethod
@@ -54,17 +55,36 @@ def dorefa_a(input, nbit_a):
 
 class DOREFAConv2d(Conv2d):
     """docstring for QuanConv"""
-    def __init__(self, in_channels, out_channels, kernel_size, quan_name_w='dorefa', quan_name_a='dorefa', nbit_w=1,
-                 nbit_a=1, stride=1,
-                 padding=0, dilation=1, groups=1,
-                 bias=True):
+
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        quan_name_w="dorefa",
+        quan_name_a="dorefa",
+        nbit_w=1,
+        nbit_a=1,
+        stride=1,
+        padding=0,
+        dilation=1,
+        groups=1,
+        bias=True,
+    ):
         super(DOREFAConv2d, self).__init__(
-            in_channels, out_channels, kernel_size, stride, padding, dilation,
-            groups, bias)
+            in_channels,
+            out_channels,
+            kernel_size,
+            stride,
+            padding,
+            dilation,
+            groups,
+            bias,
+        )
         self.nbit_w = nbit_w
         self.nbit_a = nbit_a
-        name_w_dict = {'dorefa': dorefa_w}
-        name_a_dict = {'dorefa': dorefa_a}
+        name_w_dict = {"dorefa": dorefa_w}
+        name_a_dict = {"dorefa": dorefa_a}
         self.quan_w = name_w_dict[quan_name_w]
         self.quan_a = name_a_dict[quan_name_a]
 
@@ -79,17 +99,29 @@ class DOREFAConv2d(Conv2d):
         else:
             x = input
 
-        output = conv2d(x, w, self.bias, self.stride, self.padding, self.dilation, self.groups)
+        output = conv2d(
+            x, w, self.bias, self.stride, self.padding, self.dilation, self.groups
+        )
 
         return output
 
+
 class DOREFALinear(Linear):
-    def __init__(self, in_features, out_features, bias=True, quan_name_w='dorefa', quan_name_a='dorefa', nbit_w=1, nbit_a=1):
+    def __init__(
+        self,
+        in_features,
+        out_features,
+        bias=True,
+        quan_name_w="dorefa",
+        quan_name_a="dorefa",
+        nbit_w=1,
+        nbit_a=1,
+    ):
         super(DOREFALinear, self).__init__(in_features, out_features, bias)
         self.nbit_w = nbit_w
         self.nbit_a = nbit_a
-        name_w_dict = {'dorefa': dorefa_w}
-        name_a_dict = {'dorefa': dorefa_a}
+        name_w_dict = {"dorefa": dorefa_w}
+        name_a_dict = {"dorefa": dorefa_a}
         self.quan_w = name_w_dict[quan_name_w]
         self.quan_a = name_a_dict[quan_name_a]
 
@@ -103,7 +135,6 @@ class DOREFALinear(Linear):
             x = self.quan_a(input, self.nbit_a)
         else:
             x = input
-
 
         output = linear(x, w, self.bias)
 

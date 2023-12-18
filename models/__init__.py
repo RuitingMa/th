@@ -3,4 +3,4 @@ from .xnor_lenet import *
 from .xnor_mlp import *
 from .dorefa_resnet import *
 from .bnn_caffenet import *
-from .xnor_lenet2 import *
+from .xnor_lenet_expert import *
