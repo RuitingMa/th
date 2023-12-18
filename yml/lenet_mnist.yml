@@ -1,19 +1,30 @@
 no_cuda: False
-checkpoint: "results/lenet_mnist"
-filename: null
-pretrained: null
-bin_type_1: "xnor"
-bin_type_2: "xnor"
-model_1: "lenet_expert"
-model_2: "lenet5"
-save_path: "results/lenet_mnist"
-dataset: "mnist"
-batch_size_1: 128
-batch_size_2: 128
-test_batch_size: 100
-optimizer: "adam"
-lr: 0.01
-gamma: 0.1
-steps: [80, 150]
-epochs_1: 1
-epochs_2: 1
+classifier:
+  checkpoint: "results/lenet_mnist"
+  save_path: "results/lenet_mnist"
+  dataset: "mnist"
+  models:
+    - model:
+        count: 1
+        pretrained: null
+        bin_type: "xnor"
+        model_type: "lenet5"
+        batch_size: 128
+        test_batch_size: 100
+        optimizer: "adam"
+        lr: 0.01
+        gamma: 0.1
+        steps: [80, 150]
+        epochs: 100
+    - model:
+        count: 3
+        pretrained: null
+        bin_type: "xnor"
+        model_type: "lenet_expert"
+        batch_size: 128
+        test_batch_size: 100
+        optimizer: "adam"
+        lr: 0.01
+        gamma: 0.1
+        steps: [80, 150]
+        epochs: 100

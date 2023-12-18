@@ -1,19 +1,30 @@
 no_cuda: False
-checkpoint: "results/nin_cifar10"
-filename: null
-pretrained: null
-bin_type_1: "xnor"
-bin_type_2: "xnor"
-model_1: "nin"
-model_2: "nin"
-save_path: "results/nin_cifar10"
-dataset: "cifar10"
-batch_size_1: 128
-batch_size_2: 128
-test_batch_size: 100
-optimizer: "adam"
-lr: 0.01
-gamma: 0.1
-steps: [80, 150]
-epochs_1: 100
-epochs_2: 100
+classifier:
+  checkpoint: "results/nin_cifar10"
+  save_path: "results/nin_cifar10"
+  dataset: "cifar10"
+  models:
+    - model:
+        count: 1
+        pretrained: null
+        bin_type: "xnor"
+        model_type: "nin"
+        batch_size: 128
+        test_batch_size: 100
+        optimizer: "adam"
+        lr: 0.01
+        gamma: 0.1
+        steps: [80, 150]
+        epochs: 100
+    - model:
+        count: 3
+        pretrained: null
+        bin_type: "xnor"
+        model_type: "nin"
+        batch_size: 128
+        test_batch_size: 100
+        optimizer: "adam"
+        lr: 0.01
+        gamma: 0.1
+        steps: [80, 150]
+        epochs: 100
