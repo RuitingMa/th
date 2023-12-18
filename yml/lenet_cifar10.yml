@@ -3,7 +3,8 @@ classifier:
   checkpoint: "results/lenet_cifar10"
   save_path: "results/lenet_cifar10"
   dataset: "cifar10"
-  models:
+  ensemble_learning: "bagging"
+  ensemble:
     - model:
         count: 1
         pretrained: null
