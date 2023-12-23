@@ -3,7 +3,7 @@ from .bnn_layers import *
 from .model_abc import ModelABC
 
 
-__all__ = ["bnn_caffenet"]
+__all__ = ["BNNCaffenet"]
 
 
 class BNNCaffenet(nn.Module, ModelABC):

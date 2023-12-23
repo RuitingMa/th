@@ -4,8 +4,9 @@ import torch.nn.functional as F
 
 from .dorefa_layers import DOREFAConv2d as Conv
 from .dorefa_layers import DOREFALinear as Linear
+from .model_abc import ModelABC
 
-__all__ = ["dorefa_resnet18"]
+__all__ = ["ResNet"]
 
 
 def conv3x3(in_planes, out_planes, wbit, abit, stride=1):
@@ -105,7 +106,7 @@ class Bottleneck(nn.Module):
         return out
 
 
-class ResNet(nn.Module):
+class ResNet(nn.Module, ModelABC):
     def __init__(self, block, num_blocks, wbit=1, abit=1, num_classes=10):
         super(ResNet, self).__init__()
         self.in_planes = 64
@@ -168,21 +169,36 @@ class ResNet(nn.Module):
         return out
 
 
-# def dorefa_resnet18(wbit=1, abit=1):
-#     return ResNet(BasicBlock, [2, 2, 2, 2], wbit=wbit, abit=abit)
+class ResNet18(ResNet):
+    TYPE = "resnet18"
+
+    def __init__(self, wbit=1, abit=1):
+        super(ResNet18, self).__init__(BasicBlock, [2, 2, 2, 2], wbit=wbit, abit=abit)
 
 
-# def ResNet34(wbit, abit):
-#     return ResNet(BasicBlock, [3, 4, 6, 3], wbit=wbit, abit=abit)
+class ResNet34(ResNet):
+    TYPE = "resnet34"
+
+    def __init__(self, wbit=1, abit=1):
+        super(ResNet34, self).__init__(BasicBlock, [3, 4, 6, 3], wbit=wbit, abit=abit)
 
 
-# def ResNet50(wbit, abit):
-#     return ResNet(Bottleneck, [3, 4, 6, 3], wbit=wbit, abit=abit)
+class ResNet50(ResNet):
+    TYPE = "resnet50"
+
+    def __init__(self, wbit=1, abit=1):
+        super(ResNet50, self).__init__(BasicBlock, [3, 4, 6, 3], wbit=wbit, abit=abit)
 
 
-# def ResNet101(wbit, abit):
-#     return ResNet(Bottleneck, [3, 4, 23, 3], wbit=wbit, abit=abit)
+class ResNet101(ResNet):
+    TYPE = "resnet101"
+
+    def __init__(self, wbit=1, abit=1):
+        super(ResNet101, self).__init__(BasicBlock, [3, 4, 23, 3], wbit=wbit, abit=abit)
 
 
-# def ResNet152(wbit, abit):
-#     return ResNet(Bottleneck, [3, 8, 36, 3], wbit=wbit, abit=abit)
+class ResNet152(ResNet):
+    TYPE = "resnet152"
+
+    def __init__(self, wbit=1, abit=1):
+        super(ResNet152, self).__init__(BasicBlock, [3, 8, 36, 3], wbit=wbit, abit=abit)

@@ -2,7 +2,7 @@ import torch.nn as nn
 from .xnor_layers import *
 from .model_abc import ModelABC
 
-__all__ = ["nin"]
+__all__ = ["NIN"]
 
 
 class NIN(nn.Module, ModelABC):

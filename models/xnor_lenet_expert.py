@@ -2,7 +2,7 @@ import torch.nn as nn
 from .xnor_layers import *
 from .model_abc import ModelABC
 
-__all__ = ["lenet_expert"]
+__all__ = ["LeNetExpert"]
 
 """Second version of LeNet that is smaller than the normal version
 Main architecture used by the expert classifers in the ensemble"""

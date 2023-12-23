@@ -2,7 +2,7 @@ import torch.nn as nn
 from .xnor_layers import *
 from .model_abc import ModelABC
 
-__all__ = ["lenet5"]
+__all__ = ["LeNet5"]
 
 
 class LeNet5(nn.Module, ModelABC):
