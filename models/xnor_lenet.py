@@ -1,10 +1,13 @@
 import torch.nn as nn
 from .xnor_layers import *
+from .model_abc import ModelABC
 
 __all__ = ["lenet5"]
 
 
-class LeNet5(nn.Module):
+class LeNet5(nn.Module, ModelABC):
+    TYPE = "lenet5"
+
     def __init__(self, out_classes=10):
         super(LeNet5, self).__init__()
         self.features = nn.Sequential(
@@ -43,5 +46,5 @@ class LeNet5(nn.Module):
         return x
 
 
-def lenet5(out_classes=10):
-    return LeNet5(out_classes)
+# def lenet5(out_classes=10):
+#     return LeNet5(out_classes)

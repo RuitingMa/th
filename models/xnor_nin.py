@@ -1,10 +1,13 @@
 import torch.nn as nn
 from .xnor_layers import *
+from .model_abc import ModelABC
 
 __all__ = ["nin"]
 
 
-class NIN(nn.Module):
+class NIN(nn.Module, ModelABC):
+    TYPE = "nin"
+
     def __init__(self, out_class=10):
         super(NIN, self).__init__()
 
@@ -48,5 +51,5 @@ class NIN(nn.Module):
         return x
 
 
-def nin(out_classes=10):
-    return NIN(out_classes)
+# def nin(out_classes=10):
+#     return NIN(out_classes)

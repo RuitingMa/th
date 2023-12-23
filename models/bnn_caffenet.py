@@ -1,11 +1,14 @@
 import torch.nn as nn
 from .bnn_layers import *
+from .model_abc import ModelABC
 
 
 __all__ = ["bnn_caffenet"]
 
 
-class BNNCaffenet(nn.Module):
+class BNNCaffenet(nn.Module, ModelABC):
+    TYPE = "caffenet"
+
     def __init__(self, num_classes=10):
         super(BNNCaffenet, self).__init__()
 
@@ -47,7 +50,3 @@ class BNNCaffenet(nn.Module):
                 nn.init.normal_(m.weight, 0, 0.01)
                 nn.init.zeros_(m.bias)
         return
-
-
-def bnn_caffenet(num_classes=10):
-    return BNNCaffenet(num_classes)

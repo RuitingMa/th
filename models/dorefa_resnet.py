@@ -168,21 +168,21 @@ class ResNet(nn.Module):
         return out
 
 
-def dorefa_resnet18(wbit=1, abit=1):
-    return ResNet(BasicBlock, [2, 2, 2, 2], wbit=wbit, abit=abit)
+# def dorefa_resnet18(wbit=1, abit=1):
+#     return ResNet(BasicBlock, [2, 2, 2, 2], wbit=wbit, abit=abit)
 
 
-def ResNet34(wbit, abit):
-    return ResNet(BasicBlock, [3, 4, 6, 3], wbit=wbit, abit=abit)
+# def ResNet34(wbit, abit):
+#     return ResNet(BasicBlock, [3, 4, 6, 3], wbit=wbit, abit=abit)
 
 
-def ResNet50(wbit, abit):
-    return ResNet(Bottleneck, [3, 4, 6, 3], wbit=wbit, abit=abit)
+# def ResNet50(wbit, abit):
+#     return ResNet(Bottleneck, [3, 4, 6, 3], wbit=wbit, abit=abit)
 
 
-def ResNet101(wbit, abit):
-    return ResNet(Bottleneck, [3, 4, 23, 3], wbit=wbit, abit=abit)
+# def ResNet101(wbit, abit):
+#     return ResNet(Bottleneck, [3, 4, 23, 3], wbit=wbit, abit=abit)
 
 
-def ResNet152(wbit, abit):
-    return ResNet(Bottleneck, [3, 8, 36, 3], wbit=wbit, abit=abit)
+# def ResNet152(wbit, abit):
+#     return ResNet(Bottleneck, [3, 8, 36, 3], wbit=wbit, abit=abit)

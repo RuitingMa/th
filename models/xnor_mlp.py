@@ -1,10 +1,13 @@
 import torch.nn as nn
 from .xnor_layers import *
+from .model_abc import ModelABC
 
 __all__ = ["mlp"]
 
 
-class MLP(nn.Module):
+class MLP(nn.Module, ModelABC):
+    TYPE = "mlp"
+
     def __init__(self, out_classes=10):
         super(MLP, self).__init__()
         self.classifier = nn.Sequential(
@@ -37,5 +40,5 @@ class MLP(nn.Module):
         return x
 
 
-def mlp(out_classes=10):
-    return MLP(out_classes)
+# def mlp(out_classes=10):
+#     return MLP(out_classes)

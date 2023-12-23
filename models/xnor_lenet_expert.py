@@ -1,5 +1,6 @@
 import torch.nn as nn
 from .xnor_layers import *
+from .model_abc import ModelABC
 
 __all__ = ["lenet_expert"]
 
@@ -7,9 +8,11 @@ __all__ = ["lenet_expert"]
 Main architecture used by the expert classifers in the ensemble"""
 
 
-class LeNet_expert(nn.Module):
+class LeNetExpert(nn.Module, ModelABC):
+    TYPE = "lenet_expert"
+
     def __init__(self, out_classes=10):
-        super(lenet_expert, self).__init__()
+        super(LeNetExpert, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(1, 3, kernel_size=5, stride=1),  # 3,5
             nn.BatchNorm2d(3, eps=1e-4, momentum=0.1, affine=False),
@@ -46,5 +49,5 @@ class LeNet_expert(nn.Module):
         return x
 
 
-def lenet_expert(out_classes=10):
-    return lenet_expert(out_classes)
+# def lenet_expert(out_classes=10):
+#     return lenet_expert(out_classes)
