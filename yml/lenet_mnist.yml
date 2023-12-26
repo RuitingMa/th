@@ -4,27 +4,34 @@ save_path: "results/lenet_mnist"
 dataset: "mnist"
 ensemble_learning: "bagging"
 ensemble:
-    - model:
-          count: 1
-          pretrained: null
-          bin_type: "xnor"
-          model_type: "resnet101"
-          batch_size: 128
-          test_batch_size: 100
-          optimizer: "adam"
-          lr: 0.01
-          gamma: 0.1
-          steps: [80, 150]
-          epochs: 100
-    - model:
-          count: 3
-          pretrained: null
-          bin_type: "xnor"
-          model_type: "lenet_expert"
-          batch_size: 128
-          test_batch_size: 100
-          optimizer: "adam"
-          lr: 0.01
-          gamma: 0.1
-          steps: [80, 150]
-          epochs: 100
+      - model:
+              count: 1
+              pretrained: null
+              bin_type: "xnor"
+              model_type: "resnet101"
+              train_batch_size: 128
+              test_batch_size: 100
+              optimizer: "adam"
+              lr: 0.01
+              gamma: 0.1
+              steps: [80, 150]
+              epochs: 100
+              train_lables:
+                    - all
+      - model:
+              count: 4
+              pretrained: null
+              bin_type: "xnor"
+              model_type: "lenet_expert"
+              train_batch_size: 128
+              test_batch_size: 100
+              optimizer: "adam"
+              lr: 0.01
+              gamma: 0.1
+              steps: [80, 150]
+              epochs: 100
+              train_lables:
+                    - [4, 9, 7, 1]
+                    - [5, 8, 3, 2]
+                    - [0, 6, 5, 3]
+                    - [1, 2, 8, 7]

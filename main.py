@@ -22,11 +22,8 @@ if cuda:
 
 print(type(FLAGS.ensemble[0].model.model_type))
 print(type(FLAGS.ensemble))
+# create the ensemble
 ensemble = build_ensemble(FLAGS.ensemble)
-for k, v in ensemble.items():
-    # print(k)
-    # print(v)
-    print(type(v[0]))
 
 # model_1 = eval(FLAGS.ensemble[0].model.model_type)()
 # print(type(model_1))

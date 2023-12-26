@@ -1,11 +1,12 @@
 from typing import ClassVar
+from abc import ABC, abstractmethod
 
 MODEL_REGISTRY: dict[str, type["ModelABC"]] = {}
 
 __all__ = ["ModelABC"]
 
 
-class ModelABC:
+class ModelABC(ABC):
     TYPE: ClassVar[str]
 
     @classmethod
@@ -20,3 +21,11 @@ class ModelABC:
         except KeyError:
             raise ValueError(f"{type} is not the name of a valid model type.")
         return model_cls()
+
+    @abstractmethod
+    def init_w(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def forward(self, x):
+        raise NotImplementedError
