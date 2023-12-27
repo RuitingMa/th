@@ -9,7 +9,7 @@ def load_train_data(
     labels=None,
     batch_size=64,
     sampler=None,
-    cuda=True,
+    cuda=False,
     enable_transform=True,
     download=False,
 ):
@@ -52,6 +52,7 @@ def load_train_data(
 
 
 def load_test_data(
+    labels=None,
     batch_size=1000,
     sampler=None,
     cuda=False,
@@ -74,9 +75,22 @@ def load_test_data(
         download=download,
         transform=transform,
     )
-
-    loader = torch.utils.data.DataLoader(
-        dataset, batch_size=batch_size, shuffle=False, sampler=sampler, **loader_kwargs
-    )
+    if labels is None:
+        loader = torch.utils.data.DataLoader(
+            dataset,
+            batch_size=batch_size,
+            shuffle=False,
+            sampler=sampler,
+            **loader_kwargs,
+        )
+    else:
+        target_set = torch.utils.data.Subset(dataset, labels)
+        loader = torch.utils.data.DataLoader(
+            dataset=target_set,
+            batch_size=batch_size,
+            shuffle=False,
+            sampler=sampler,
+            **loader_kwargs,
+        )
 
     return loader

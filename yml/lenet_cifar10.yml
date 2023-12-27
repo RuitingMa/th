@@ -16,7 +16,7 @@ ensemble:
           gamma: 0.1
           steps: [80, 150]
           epochs: 100
-          train_lables:
+          train_labels:
               - all
     - model:
           count: 6
@@ -30,7 +30,7 @@ ensemble:
           gamma: 0.1
           steps: [80, 150]
           epochs: 100
-          test_lables:
+          train_labels:
               - [1, 0, 9, 8]
               - [8, 0, 5, 2]
               - [2, 5, 4, 6]

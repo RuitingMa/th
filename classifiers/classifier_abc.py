@@ -1,5 +1,4 @@
 from typing import ClassVar
-from models.model_abc import ModelABC
 from abc import ABC, abstractmethod
 import shutil
 import os
@@ -9,7 +8,7 @@ from tqdm import tqdm
 
 CLASSIFIER_REGISTRY: dict[str, type["ClassifierABC"]] = {}
 
-__all__ = ["ClassifierABC"]
+__all__ = ["ClassifierABC", "CLASSIFIER_REGISTRY"]
 
 
 class ClassifierABC(ABC):
@@ -115,5 +114,3 @@ class ClassifierABC(ABC):
                 is_best,
                 checkpoint,
             )
-
-        return

@@ -157,6 +157,11 @@ def app():
         if job_yaml_file is None:
             job_yaml_file = sys.stdin.readline()
         FLAGS = Config(job_yaml_file)
+        try:
+            download_data = FLAGS.download_data
+        except AttributeError:
+            download_data = False
+        FLAGS.download_data = download_data
         return FLAGS
     else:
         return FLAGS

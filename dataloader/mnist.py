@@ -8,7 +8,7 @@ def load_train_data(
     labels=None,
     batch_size=64,
     sampler=None,
-    cuda=True,
+    cuda=False,
     enable_transform=True,
     download=False,
 ):

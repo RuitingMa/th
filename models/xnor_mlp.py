@@ -10,6 +10,7 @@ class MLP(nn.Module, ModelABC):
 
     def __init__(self, out_classes=10):
         super(MLP, self).__init__()
+
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Linear(28 * 28, 512),

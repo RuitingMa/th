@@ -1,17 +1,7 @@
 import torch
-from classifiers.xnor_classifier import *
-from classifiers.dorefa_classifier import *
-from classifiers.bnn_classifier import *
 from config import FLAGS
-from models import *
-import pandas as pd
-import numpy as np
-from ensemble import *
-from utils import build_ensemble
 
-from matplotlib import pyplot
-from tqdm import tqdm
-from torch import no_grad
+from utils import build_ensemble
 
 cuda = torch.cuda.is_available() and not (FLAGS.no_cuda)
 device = torch.device("cuda" if cuda else "cpu")
@@ -20,10 +10,14 @@ if cuda:
     torch.backends.cudnn.deterministic = True
     torch.cuda.manual_seed(0)
 
-print(type(FLAGS.ensemble[0].model.model_type))
-print(type(FLAGS.ensemble))
+print(FLAGS.download_data)
 # create the ensemble
-ensemble = build_ensemble(FLAGS.ensemble)
+ensemble = build_ensemble(
+    FLAGS.ensemble, device, FLAGS.dataset, cuda, FLAGS.download_data
+)
+print(ensemble)
+# make download an optional config option
+
 
 # model_1 = eval(FLAGS.ensemble[0].model.model_type)()
 # print(type(model_1))
