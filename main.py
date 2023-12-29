@@ -2,6 +2,7 @@ import torch
 from config import FLAGS
 
 from utils import build_ensemble
+from ensemble_algorithms.algorithm_abc import AlgorithmABC
 
 cuda = torch.cuda.is_available() and not (FLAGS.no_cuda)
 device = torch.device("cuda" if cuda else "cpu")
@@ -13,9 +14,15 @@ if cuda:
 print(FLAGS.download_data)
 # create the ensemble
 ensemble = build_ensemble(
-    FLAGS.ensemble, device, FLAGS.dataset, cuda, FLAGS.download_data
+    FLAGS.ensemble,
+    device,
+    FLAGS.dataset,
+    cuda,
+    FLAGS.download_data,
 )
-print(ensemble)
+
+algorithm = AlgorithmABC(ensemble=ensemble)
+algorithm.train()
 # make download an optional config option
 
 

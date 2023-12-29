@@ -1,6 +1,4 @@
 no_cuda: False
-checkpoint: "results/nin_cifar10"
-save_path: "results/nin_cifar10"
 dataset: "cifar10"
 ensemble_learning: "bagging"
 download_data: True
@@ -17,13 +15,14 @@ ensemble:
           gamma: 0.1
           steps: [80, 150]
           epochs: 100
+          checkpoint: "results/xnor_nin"
           train_labels:
               - all
     - model:
           count: 6
           pretrained: null
           bin_type: "xnor"
-          model_type: "nin"
+          model_type: "lenet5"
           batch_size: 128
           test_batch_size: 100
           optimizer: "adam"
@@ -31,6 +30,7 @@ ensemble:
           gamma: 0.1
           steps: [80, 150]
           epochs: 100
+          checkpoint: "results/xnor_lenet5"
           train_labels:
               - [0, 1, 8, 9]
               - [8, 0, 5, 2]

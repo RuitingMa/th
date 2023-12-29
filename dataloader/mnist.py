@@ -47,7 +47,9 @@ def load_train_data(
     return loader
 
 
-def load_test_data(batch_size=1000, sampler=None, cuda=False, download=False):
+def load_test_data(
+    labels=None, batch_size=1000, sampler=None, cuda=False, download=False
+):
     loader_kwargs = {"num_workers": 4, "pin_memory": True} if cuda else {}
 
     transform = tvt.Compose(
@@ -64,9 +66,22 @@ def load_test_data(batch_size=1000, sampler=None, cuda=False, download=False):
         download=download,
         transform=transform,
     )
-
-    loader = torch.utils.data.DataLoader(
-        dataset, batch_size=batch_size, shuffle=False, sampler=sampler, **loader_kwargs
-    )
+    if labels is None:
+        loader = torch.utils.data.DataLoader(
+            dataset,
+            batch_size=batch_size,
+            shuffle=False,
+            sampler=sampler,
+            **loader_kwargs,
+        )
+    else:
+        target_set = torch.utils.data.Subset(dataset, labels)
+        loader = torch.utils.data.DataLoader(
+            dataset=target_set,
+            batch_size=batch_size,
+            shuffle=False,
+            sampler=sampler,
+            **loader_kwargs,
+        )
 
     return loader

@@ -1,21 +1,21 @@
 no_cuda: False
-checkpoint: "results/lenet_mnist"
-save_path: "results/lenet_mnist"
 dataset: "mnist"
 ensemble_learning: "bagging"
+download_data: True
 ensemble:
       - model:
               count: 1
               pretrained: null
               bin_type: "xnor"
-              model_type: "resnet101"
+              model_type: "lenet5"
               train_batch_size: 128
               test_batch_size: 100
               optimizer: "adam"
               lr: 0.01
               gamma: 0.1
               steps: [80, 150]
-              epochs: 100
+              epochs: 5
+              checkpoint: "results/xnor_resnet101"
               train_labels:
                     - all
       - model:
@@ -29,7 +29,8 @@ ensemble:
               lr: 0.01
               gamma: 0.1
               steps: [80, 150]
-              epochs: 100
+              epochs: 5
+              checkpoint: "results/xnor_lenet_expert"
               train_labels:
                     - [4, 9, 7, 1]
                     - [5, 8, 3, 2]

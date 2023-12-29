@@ -1,7 +1,7 @@
-from typing import ClassVar
+from typing import ClassVar, Type, Dict
 from abc import ABC, abstractmethod
 
-MODEL_REGISTRY: dict[str, type["ModelABC"]] = {}
+MODEL_REGISTRY: Dict[str, Type["ModelABC"]] = {}
 
 __all__ = ["ModelABC", "MODEL_REGISTRY"]
 
@@ -11,13 +11,8 @@ class ModelABC(ABC):
 
     @classmethod
     def __init_subclass__(cls, **kwargs):
-        super().__init_subclass__(**kwargs)
         if hasattr(cls, "TYPE"):
             MODEL_REGISTRY[cls.TYPE] = cls
-
-    @abstractmethod
-    def __init__(self):
-        pass
 
     @classmethod
     def from_config(cls, model_type) -> "ModelABC":

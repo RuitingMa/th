@@ -132,6 +132,8 @@ class Config(AttrDict):
 
     """
 
+    VALID_OPTIMIZERS = ["adam", "sgd"]
+
     def __init__(self, filename=None, verbose=False):
         assert os.path.exists(filename), "File {} not exist.".format(filename)
         try:
@@ -140,6 +142,12 @@ class Config(AttrDict):
         except EnvironmentError:
             print('Please check the file with name of "%s"', filename)
         super(Config, self).__init__(cfg_dict)
+        # Validate optimizer value
+        for member in self.ensemble:
+            if member.model.optimizer not in self.VALID_OPTIMIZERS:
+                raise ValueError(
+                    f"{member.model.optimizer} is an invalid value for optimizer. Accepted values are {', '.join(self.VALID_OPTIMIZERS)}."
+                )
         if verbose:
             print(" pi.cfg ".center(80, "-"))
             print(self.__repr__())
@@ -162,6 +170,11 @@ def app():
         except AttributeError:
             download_data = False
         FLAGS.download_data = download_data
+        for member in FLAGS.ensemble:
+            if member.model.optimizer != "adam" and member.model.optimizer != "sgd":
+                raise AttributeError(
+                    f"{FLAGS.optimizer} is an invalid value for optimizer. Accepted values are adam or sgd."
+                )
         return FLAGS
     else:
         return FLAGS
