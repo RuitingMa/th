@@ -1,13 +1,6 @@
-import os
 from typing import Optional
-import torch
-import numpy as np
-import torch.nn.functional as nnf
-from torch import save, no_grad
 from tqdm import tqdm
-from models.xnor_layers import XNORConv2d
 from .classifier_abc import ClassifierABC, DataLoaders, ModelConfig
-import shutil
 
 
 class BnnClassifier(ClassifierABC):

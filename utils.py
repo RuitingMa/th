@@ -38,14 +38,11 @@ def build_ensemble(
                 train_loader = dataset.load_train_data(
                     cuda=cuda, download=download_data
                 )
-                test_loader = dataset.load_test_data(cuda=cuda, download=download_data)
             else:
                 train_loader = dataset.load_train_data(
                     labels=labels, cuda=cuda, download=download_data
                 )
-                test_loader = dataset.load_test_data(
-                    labels=labels, cuda=cuda, download=download_data
-                )
+            test_loader = dataset.load_test_data(cuda=cuda, download=download_data)
             classifier = ClassifierABC.from_config(
                 bin_type,
                 new_model,

@@ -1,5 +1,6 @@
 import torch
 from config import FLAGS
+from ensemble_algorithms.bagging import Bagging
 
 from utils import build_ensemble
 from ensemble_algorithms.algorithm_abc import AlgorithmABC
@@ -21,9 +22,9 @@ ensemble = build_ensemble(
     FLAGS.download_data,
 )
 
-algorithm = AlgorithmABC(ensemble=ensemble)
+algorithm = Bagging(ensemble=ensemble)
 algorithm.train()
-# make download an optional config option
+algorithm.test()
 
 
 # model_1 = eval(FLAGS.ensemble[0].model.model_type)()

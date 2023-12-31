@@ -15,3 +15,7 @@ class AlgorithmABC:
     # @abstractmethod
     # def test(ensemble):
     #     raise NotImplementedError
+
+    # @abstractmethod
+    # def predict(ensemble):
+    #     raise NotImplementedError

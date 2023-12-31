@@ -106,19 +106,23 @@ class ClassifierABC(ABC):
         )
 
     @staticmethod
-    def save_checkpoint(state, is_best, checkpoint):
+    def save_checkpoint(state, checkpoint):
         head, tail = os.path.split(checkpoint)
         if not os.path.exists(head):
             os.makedirs(head)
 
         filename = os.path.join(head, "{0}_checkpoint.pth.tar".format(tail))
         save(state, filename)
-        if is_best:
-            shutil.copyfile(
-                filename, os.path.join(head, "{0}_best.pth.tar".format(tail))
-            )
 
         return
+
+    def get_targets(self):
+        targets = torch.tensor([], dtype=torch.long).to(self.model_config.device)
+        with no_grad():
+            for _, target in tqdm(self.data_loaders.test_loader):
+                target = target.to(self.model_config.device)
+                targets = torch.cat((targets, target), dim=0)
+        return targets
 
     def test(self):
         if self.data_loaders.test_loader is None:
@@ -126,6 +130,7 @@ class ClassifierABC(ABC):
         self.model_config.model.eval()
         top1 = 0
         test_loss = 0.0
+        predictions = torch.tensor([], dtype=torch.long).to(self.model_config.device)
 
         with no_grad():
             for data, target in tqdm(self.data_loaders.test_loader):
@@ -136,10 +141,10 @@ class ClassifierABC(ABC):
                 test_loss += self.model_config.criterion(output, target).item()
                 pred = output.argmax(dim=1, keepdim=True)
                 top1 += pred.eq(target.view_as(pred)).sum().item()
+                predictions = torch.cat((predictions, pred), dim=0)
 
         top1_acc = 100.0 * top1 / len(self.data_loaders.test_loader.sampler)
-
-        return top1_acc
+        return top1_acc, predictions
 
     @abstractmethod
     def train_step(self):
@@ -151,10 +156,7 @@ class ClassifierABC(ABC):
         if self.data_loaders.train_loader is None:
             raise ValueError("Train loader has not been specified for {self}.")
 
-        best_accuracy = 0.0
-
         losses = []
-        accuracies = []
 
         for epoch in range(1, self.train_epochs + 1):
             self.model_config.model.train()
@@ -162,29 +164,21 @@ class ClassifierABC(ABC):
             losses += epoch_losses
             epoch_losses = np.array(epoch_losses)
             lr = self.model_config.optimizer.param_groups[0]["lr"]
-            test_accuracy = self.test()
-            accuracies.append(test_accuracy)
             if self.model_config.scheduler:
                 self.model_config.scheduler.step()
-            is_best = test_accuracy > best_accuracy
-            if is_best:
-                best_accuracy = test_accuracy
 
             print(
-                "Train Epoch {0}\t Loss: {1:.6f}\t Test Accuracy {2:.3f} \t lr: {3:.4f}".format(
-                    epoch, epoch_losses.mean(), test_accuracy, lr
+                "Train Epoch {0}\t Loss: {1:.6f} \t lr: {2:.4f}".format(
+                    epoch, epoch_losses.mean(), lr
                 )
             )
-            print("Best accuracy: {:.3f} ".format(best_accuracy))
 
             self.save_checkpoint(
                 {
                     "epoch": epoch + 1,
                     "state_dict": self.model_config.model.state_dict(),
-                    "best_accuracy": best_accuracy,
                     "optimizer": self.model_config.optimizer.state_dict(),
                     "criterion": self.model_config.criterion,
                 },
-                is_best,
                 self.model_config.checkpoint,
             )
