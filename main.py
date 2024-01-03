@@ -12,7 +12,6 @@ if cuda:
     torch.backends.cudnn.deterministic = True
     torch.cuda.manual_seed(0)
 
-print(FLAGS.download_data)
 # create the ensemble
 ensemble = build_ensemble(
     FLAGS.ensemble,

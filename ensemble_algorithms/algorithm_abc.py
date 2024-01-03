@@ -9,7 +9,10 @@ class AlgorithmABC:
         self.ensemble = ensemble
 
     def train(self):
-        for classifier in self.ensemble:
+        print()
+        print("Started ensemble training")
+        for index, classifier in enumerate(self.ensemble):
+            print(f"Training classifier {index+1}")
             classifier.train()
 
     # @abstractmethod

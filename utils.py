@@ -34,6 +34,7 @@ def build_ensemble(
             new_model = ModelABC.from_config(model_type)
             model_checkpoint = os.path.join(checkpoint, f"model_{model_count}")
             labels = model_info.model.train_labels[model_count]
+            print(f"labels: {labels}")
             if labels == "all":
                 train_loader = dataset.load_train_data(
                     cuda=cuda, download=download_data

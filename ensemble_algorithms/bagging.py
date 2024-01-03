@@ -10,20 +10,40 @@ class Bagging(AlgorithmABC):
         super().__init__(ensemble)
 
     def test(self):
-        self._hard_voting()
-
-    def _hard_voting(self):
+        print()
+        print("Started ensemble testing")
         all_predictions = torch.empty((0,))
-        for member in self.ensemble:
-            accuracy, predictions = member.test()
+        for i, member in enumerate(self.ensemble):
+            accuracy, predictions, confidence_scores = member.test()
+            if i == 0:
+                sum_confidence_scores = torch.zeros_like(confidence_scores)
+                sum_squared_confidence_scores = torch.zeros_like(confidence_scores)
             predictions = predictions.view(-1, 1)
+            sum_confidence_scores += confidence_scores
+            sum_squared_confidence_scores += confidence_scores**2
             all_predictions = torch.cat((all_predictions, predictions), dim=1)
             print(f"member accuracy: {accuracy}")
+        # hard voting
+        print()
         majority_votes, _ = torch.mode(all_predictions, dim=1)
         accuracy = self._get_accuracy(majority_votes)
         print(f"hard voting accuracy: {accuracy}")
-        return majority_votes
+        # average confidence scores
+        mean_confidence_scores = sum_confidence_scores / len(self.ensemble)
+        _, average_confidence_vote = torch.max(mean_confidence_scores, dim=1)
+        accuracy = self._get_accuracy(average_confidence_vote)
+        print(f"average confidence accuracy: {accuracy}")
+        # average confidence scores
+        mean_average_confidence_scores = sum_squared_confidence_scores / len(
+            self.ensemble
+        )
+        _, average_squared_confidence_vote = torch.max(
+            mean_average_confidence_scores, dim=1
+        )
+        accuracy = self._get_accuracy(average_squared_confidence_vote)
+        print(f"average squared confidence accuracy: {accuracy}")
 
     def _get_accuracy(self, predictions):
+        # assumes all models have the same test targets (ie "all" labels)
         targets = self.ensemble[0].get_targets()
         return 100 * ((predictions == targets).sum().item() / len(targets))

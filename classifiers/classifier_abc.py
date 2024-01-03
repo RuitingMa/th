@@ -7,6 +7,7 @@ from torch import save, no_grad
 import torch
 from tqdm import tqdm
 from enum import Enum
+import torch.nn.functional as F
 
 
 CLASSIFIER_REGISTRY: Dict[str, Type["ClassifierABC"]] = {}
@@ -131,6 +132,9 @@ class ClassifierABC(ABC):
         top1 = 0
         test_loss = 0.0
         predictions = torch.tensor([], dtype=torch.long).to(self.model_config.device)
+        confidence_scores = torch.tensor([], dtype=torch.float).to(
+            self.model_config.device
+        )
 
         with no_grad():
             for data, target in tqdm(self.data_loaders.test_loader):
@@ -138,19 +142,22 @@ class ClassifierABC(ABC):
                     self.model_config.device
                 )
                 output = self.model_config.model(data)
+                probabilities = F.softmax(output, dim=1)
                 test_loss += self.model_config.criterion(output, target).item()
                 pred = output.argmax(dim=1, keepdim=True)
                 top1 += pred.eq(target.view_as(pred)).sum().item()
                 predictions = torch.cat((predictions, pred), dim=0)
+                confidence_scores = torch.cat((confidence_scores, probabilities), dim=0)
 
         top1_acc = 100.0 * top1 / len(self.data_loaders.test_loader.sampler)
-        return top1_acc, predictions
+        return top1_acc, predictions, confidence_scores
 
     @abstractmethod
     def train_step(self):
         raise NotImplementedError
 
     def train(self):
+        print(self.model_config.model)
         if self.model_config.checkpoint is None:
             raise ValueError("Specify a valid checkpoint")
         if self.data_loaders.train_loader is None:

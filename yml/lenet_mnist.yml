@@ -4,35 +4,21 @@ ensemble_learning: "bagging"
 download_data: True
 ensemble:
       - model:
-              count: 1
+              count: 5
               pretrained: null
               bin_type: "xnor"
-              model_type: "lenet5"
+              model_type: "nin"
               train_batch_size: 128
               test_batch_size: 100
               optimizer: "adam"
               lr: 0.01
               gamma: 0.1
               steps: [80, 150]
-              epochs: 5
-              checkpoint: "results/xnor_resnet101"
+              epochs: 100
+              checkpoint: "results/xnor_lenet5"
               train_labels:
-                    - all
-      - model:
-              count: 4
-              pretrained: null
-              bin_type: "xnor"
-              model_type: "lenet_expert"
-              train_batch_size: 128
-              test_batch_size: 100
-              optimizer: "adam"
-              lr: 0.01
-              gamma: 0.1
-              steps: [80, 150]
-              epochs: 5
-              checkpoint: "results/xnor_lenet_expert"
-              train_labels:
-                    - [4, 9, 7, 1]
-                    - [5, 8, 3, 2]
-                    - [0, 6, 5, 3]
-                    - [1, 2, 8, 7]
+                    - [0, 1, 2, 3]
+                    - [2, 3, 4, 5]
+                    - [4, 5, 6, 7]
+                    - [6, 7, 8, 9]
+                    - [8, 9, 0, 1]

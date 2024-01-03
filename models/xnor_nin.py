@@ -12,7 +12,7 @@ class NIN(nn.Module, ModelABC):
         super(NIN, self).__init__()
 
         self.features = nn.Sequential(
-            nn.Conv2d(3, 50, kernel_size=5, stride=1, padding=2),
+            nn.Conv2d(1, 50, kernel_size=5, stride=1, padding=2),
             nn.BatchNorm2d(50, eps=1e-4, momentum=0.1, affine=False),
             nn.ReLU(inplace=True),
             BNConvReLU(50, 40, kernel_size=1, stride=1, padding=0),
