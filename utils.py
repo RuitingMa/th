@@ -30,6 +30,8 @@ def build_ensemble(
         gamma = model_info.model.gamma
         epochs = model_info.model.epochs
         checkpoint = model_info.model.checkpoint
+        test_batch_size = model_info.model.test_batch_size
+        train_batch_size = model_info.model.train_batch_size
         for model_count in range(model_info.model.count):
             new_model = ModelABC.from_config(model_type)
             model_checkpoint = os.path.join(checkpoint, f"model_{model_count}")
@@ -37,13 +39,20 @@ def build_ensemble(
             print(f"labels: {labels}")
             if labels == "all":
                 train_loader = dataset.load_train_data(
-                    cuda=cuda, download=download_data
+                    cuda=cuda, download=download_data, batch_size=train_batch_size
                 )
             else:
                 train_loader = dataset.load_train_data(
-                    labels=labels, cuda=cuda, download=download_data
+                    labels=labels,
+                    cuda=cuda,
+                    download=download_data,
+                    batch_size=train_batch_size,
                 )
-            test_loader = dataset.load_test_data(cuda=cuda, download=download_data)
+            test_loader = dataset.load_test_data(
+                cuda=cuda,
+                download=download_data,
+                batch_size=test_batch_size,
+            )
             classifier = ClassifierABC.from_config(
                 bin_type,
                 new_model,

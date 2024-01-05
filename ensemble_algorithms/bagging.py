@@ -10,6 +10,10 @@ class Bagging(AlgorithmABC):
         super().__init__(ensemble)
 
     def test(self):
+        """
+        Tests the ensemble using hard voting, average confidence scores,
+        and average squared confidence scores
+        """
         print()
         print("Started ensemble testing")
         all_predictions = torch.empty((0,))
@@ -26,24 +30,19 @@ class Bagging(AlgorithmABC):
         # hard voting
         print()
         majority_votes, _ = torch.mode(all_predictions, dim=1)
-        accuracy = self._get_accuracy(majority_votes)
+        accuracy = self.get_accuracy(majority_votes)
         print(f"hard voting accuracy: {accuracy}")
         # average confidence scores
         mean_confidence_scores = sum_confidence_scores / len(self.ensemble)
         _, average_confidence_vote = torch.max(mean_confidence_scores, dim=1)
-        accuracy = self._get_accuracy(average_confidence_vote)
+        accuracy = self.get_accuracy(average_confidence_vote)
         print(f"average confidence accuracy: {accuracy}")
         # average confidence scores
-        mean_average_confidence_scores = sum_squared_confidence_scores / len(
+        mean_squared_confidence_scores = sum_squared_confidence_scores / len(
             self.ensemble
         )
         _, average_squared_confidence_vote = torch.max(
-            mean_average_confidence_scores, dim=1
+            mean_squared_confidence_scores, dim=1
         )
-        accuracy = self._get_accuracy(average_squared_confidence_vote)
+        accuracy = self.get_accuracy(average_squared_confidence_vote)
         print(f"average squared confidence accuracy: {accuracy}")
-
-    def _get_accuracy(self, predictions):
-        # assumes all models have the same test targets (ie "all" labels)
-        targets = self.ensemble[0].get_targets()
-        return 100 * ((predictions == targets).sum().item() / len(targets))

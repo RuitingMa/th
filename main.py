@@ -1,6 +1,7 @@
 import torch
 from config import FLAGS
 from ensemble_algorithms.bagging import Bagging
+from ensemble_algorithms.dynamic_expert_voting import DynamicExpertVoting
 
 from utils import build_ensemble
 from ensemble_algorithms.algorithm_abc import AlgorithmABC
@@ -21,7 +22,7 @@ ensemble = build_ensemble(
     FLAGS.download_data,
 )
 
-algorithm = Bagging(ensemble=ensemble)
+algorithm = DynamicExpertVoting(ensemble=ensemble)
 algorithm.train()
 algorithm.test()
 

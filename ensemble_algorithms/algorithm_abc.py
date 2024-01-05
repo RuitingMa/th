@@ -15,6 +15,11 @@ class AlgorithmABC:
             print(f"Training classifier {index+1}")
             classifier.train()
 
+    def get_accuracy(self, predictions):
+        # assumes all models have the same test targets (ie "all" labels)
+        targets = self.ensemble[0].get_targets()
+        return 100 * ((predictions == targets).sum().item() / len(targets))
+
     # @abstractmethod
     # def test(ensemble):
     #     raise NotImplementedError

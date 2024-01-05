@@ -118,7 +118,7 @@ class ClassifierABC(ABC):
         return
 
     def get_targets(self):
-        targets = torch.tensor([], dtype=torch.long).to(self.model_config.device)
+        targets = torch.tensor([], dtype=torch.int).to(self.model_config.device)
         with no_grad():
             for _, target in tqdm(self.data_loaders.test_loader):
                 target = target.to(self.model_config.device)
@@ -131,7 +131,7 @@ class ClassifierABC(ABC):
         self.model_config.model.eval()
         top1 = 0
         test_loss = 0.0
-        predictions = torch.tensor([], dtype=torch.long).to(self.model_config.device)
+        predictions = torch.tensor([], dtype=torch.int).to(self.model_config.device)
         confidence_scores = torch.tensor([], dtype=torch.float).to(
             self.model_config.device
         )
@@ -157,7 +157,6 @@ class ClassifierABC(ABC):
         raise NotImplementedError
 
     def train(self):
-        print(self.model_config.model)
         if self.model_config.checkpoint is None:
             raise ValueError("Specify a valid checkpoint")
         if self.data_loaders.train_loader is None:
