@@ -10,6 +10,9 @@ class DynamicExpertVoting(AlgorithmABC):
         super().__init__(ensemble)
 
     def test(self):
+        """
+        Tests and predicts labels using dynamic expert voting.
+        """
         print()
         print("Started ensemble testing")
         # TODO: assuming that the first classifier is trained on all labels (ie meta classifier)
@@ -42,15 +45,11 @@ class DynamicExpertVoting(AlgorithmABC):
             mean_squared_confidence_scores = (
                 sum_squared_confidence_scores / member_count
             )
-            # print("mean squared confidence scores")
-            # print(mean_squared_confidence_scores)
             average_squared_confidence_vote = torch.argmax(
                 mean_squared_confidence_scores
             )
-            # print(average_squared_confidence_vote)
             ensemble_predictions = torch.cat(
                 (ensemble_predictions, average_squared_confidence_vote.unsqueeze(0))
             )
-            # print(ensemble_predictions)
         accuracy = self.get_accuracy(ensemble_predictions)
         print(f"dynamic expoert vote accuracy: {accuracy}")

@@ -9,10 +9,10 @@ class Bagging(AlgorithmABC):
     def __init__(self, ensemble: ClassifierABC):
         super().__init__(ensemble)
 
-    def test(self):
+    def test(self) -> float:
         """
-        Tests the ensemble using hard voting, average confidence scores,
-        and average squared confidence scores
+        Tests the ensemble and calculates system accuracy using hard voting,
+        average confidence scores, and average squared confidence scores.
         """
         print()
         print("Started ensemble testing")

@@ -132,6 +132,7 @@ class ClassifierABC(ABC):
     ) -> "ClassifierABC":
         """
         Registers a classifier from config using the provided parameters.
+        Raises a ValueError if the name is not a valid classifier type.
 
         Args:
             name: Name of the classifier.

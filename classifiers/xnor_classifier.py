@@ -5,6 +5,10 @@ from .classifier_abc import ClassifierABC, DataLoaders, ModelConfig
 
 
 class XnorClassifier(ClassifierABC):
+    """
+    Represents a XNOR classifier.
+    """
+
     NAME = "xnor"
 
     def __init__(

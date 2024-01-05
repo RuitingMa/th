@@ -4,6 +4,10 @@ from .classifier_abc import ClassifierABC, DataLoaders, ModelConfig
 
 
 class DorefaClassifier(ClassifierABC):
+    """
+    Represents a Dorefa classifier.
+    """
+
     NAME = "dorefa"
 
     def __init__(

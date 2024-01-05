@@ -4,6 +4,10 @@ from .classifier_abc import ClassifierABC, DataLoaders, ModelConfig
 
 
 class BnnClassifier(ClassifierABC):
+    """
+    Represents a Bayesian neural network classifier.
+    """
+
     NAME = "bnn"
 
     def __init__(
