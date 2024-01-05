@@ -1,4 +1,5 @@
 import os
+from typing import List
 import torch
 from torchvision.datasets import CIFAR10
 from torch.utils.data import Subset, ConcatDataset
@@ -6,13 +7,27 @@ import torchvision.transforms as tvt
 
 
 def load_train_data(
-    labels=None,
-    batch_size=64,
-    sampler=None,
-    cuda=False,
-    enable_transform=True,
-    download=False,
-):
+    labels: List[int] = None,
+    batch_size: int = 64,
+    sampler: torch.utils.data.Sampler = None,
+    cuda: bool = False,
+    enable_transform: bool = True,
+    download: bool = False,
+) -> torch.utils.data.DataLoader:
+    """
+    Loads training data for CIFAR10 dataset using the specified options.
+
+    Args:
+        labels: List of labels to load. If None, all labels are loaded.
+        batch_size: Batch size.
+        sampler: Sampler to use for loading data.
+        cuda: Whether to use CUDA.
+        enable_transform: Whether to enable data augmentation.
+        download: Whether to download the dataset.
+
+    Returns:
+        DataLoader for the training data.
+    """
     loader_kwargs = {"num_workers": 4, "pin_memory": True} if cuda else {}
     transform = tvt.Compose(
         [
@@ -53,12 +68,25 @@ def load_train_data(
 
 
 def load_test_data(
-    labels=None,
-    batch_size=1000,
-    sampler=None,
-    cuda=False,
-    download=False,
-):
+    labels: List[int] = None,
+    batch_size: int = 1000,
+    sampler: torch.utils.data.Sampler = None,
+    cuda: bool = False,
+    download: bool = False,
+) -> torch.utils.data.DataLoader:
+    """
+    Loads test data for CIFAR10 dataset using the specified options.
+
+    Args:
+        labels: List of labels to load. If None, all labels are loaded.
+        batch_size: Batch size.
+        sampler: Sampler to use for loading data.
+        cuda: Whether to use CUDA.
+        download: Whether to download the dataset.
+
+    Returns:
+        DataLoader for the test data.
+    """
     loader_kwargs = {"num_workers": 4, "pin_memory": True} if cuda else {}
 
     transform = tvt.Compose(
