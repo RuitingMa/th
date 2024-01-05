@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from tqdm import tqdm
 from .classifier_abc import ClassifierABC, DataLoaders, ModelConfig
 
@@ -14,7 +14,7 @@ class DorefaClassifier(ClassifierABC):
     ):
         super().__init__(model_config, data_loaders, train_epochs)
 
-    def train_step(self):
+    def train_step(self) -> List[float]:
         losses = []
         self.model_config.model.train()
 
