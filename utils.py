@@ -32,6 +32,7 @@ def build_ensemble(
         checkpoint = model_info.model.checkpoint
         test_batch_size = model_info.model.test_batch_size
         train_batch_size = model_info.model.train_batch_size
+        # TODO: add enable_transformation flag control
         for model_count in range(model_info.model.count):
             new_model = ModelABC.from_config(model_type)
             model_checkpoint = os.path.join(checkpoint, f"model_{model_count}")

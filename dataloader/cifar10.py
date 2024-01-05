@@ -40,7 +40,8 @@ def load_train_data(
             **loader_kwargs,
         )
     else:
-        target_set = torch.utils.data.Subset(dataset, labels)
+        indices = [i for i, x in enumerate(dataset.targets) if x in labels]
+        target_set = torch.utils.data.Subset(dataset, indices)
         loader = torch.utils.data.DataLoader(
             dataset=target_set,
             batch_size=batch_size,
@@ -84,7 +85,8 @@ def load_test_data(
             **loader_kwargs,
         )
     else:
-        target_set = torch.utils.data.Subset(dataset, labels)
+        indices = [i for i, x in enumerate(dataset.targets) if x in labels]
+        target_set = torch.utils.data.Subset(dataset, indices)
         loader = torch.utils.data.DataLoader(
             dataset=target_set,
             batch_size=batch_size,
