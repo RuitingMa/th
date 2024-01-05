@@ -24,15 +24,13 @@ class DynamicExpertVoting(AlgorithmABC):
 
         for i, row in enumerate(meta_confidence_scores):
             possible_classes = torch.where(row > 0.15)[0].tolist()
+            if len(possible_classes) == 0:
+                print("no possible classes")
+                # possible_classes = torch.argmax(row).unsqueeze(0).tolist()
             member_count = 0
             for member in self.ensemble[1:]:
-                # print("indices vs digits")
-                # print(
-                #     possible_classes, member.data_loaders.train_loader.dataset.indices
-                # )
                 if any(
-                    digit in member.data_loaders.train_loader.dataset.indices
-                    for digit in possible_classes
+                    digit in member.data_loaders.labels for digit in possible_classes
                 ):
                     expert_confidence_score = expert_confidence_scores[member][i]
                     if member_count == 0:

@@ -21,9 +21,10 @@ class OptimizerType(Enum):
 
 
 class DataLoaders:
-    def __init__(self, train_loader=None, test_loader=None):
+    def __init__(self, train_loader=None, test_loader=None, labels=None):
         self.train_loader = train_loader
         self.test_loader = test_loader
+        self.labels = labels
 
 
 class ModelConfig:
@@ -76,6 +77,7 @@ class ClassifierABC(ABC):
         steps,
         gamma,
         checkpoint,
+        labels=None,
         train_epochs=100,
         train_loader=None,
         test_loader=None,
@@ -98,6 +100,7 @@ class ClassifierABC(ABC):
         data_loaders = DataLoaders(
             train_loader=train_loader,
             test_loader=test_loader,
+            labels=labels,
         )
 
         return classifier_cls(

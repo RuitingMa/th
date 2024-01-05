@@ -62,6 +62,7 @@ def build_ensemble(
                 steps,
                 gamma,
                 model_checkpoint,
+                labels,
                 epochs,
                 train_loader,
                 test_loader,
