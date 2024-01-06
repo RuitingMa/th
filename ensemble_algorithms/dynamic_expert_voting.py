@@ -28,8 +28,11 @@ class DynamicExpertVoting(AlgorithmABC):
         for i, row in enumerate(meta_confidence_scores):
             possible_classes = torch.where(row > 0.15)[0].tolist()
             if len(possible_classes) == 0:
-                print("no possible classes")
-                # possible_classes = torch.argmax(row).unsqueeze(0).tolist()
+                print(
+                    "no possible classes found. Using main model confidence score's max value."
+                )
+                possible_class = torch.argmax(row).item()
+                possible_classes = [possible_class]
             member_count = 0
             for member in self.ensemble[1:]:
                 if any(
