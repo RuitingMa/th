@@ -4,7 +4,7 @@ from .algorithm_abc import AlgorithmABC
 
 
 class DynamicExpertVoting(AlgorithmABC):
-    NAME = "dynamic_expert_vote"
+    NAME = "dynamic_expert_voting"
 
     def __init__(self, ensemble: ClassifierABC):
         super().__init__(ensemble)

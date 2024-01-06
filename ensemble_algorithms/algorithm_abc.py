@@ -22,6 +22,11 @@ class AlgorithmABC(ABC):
     def __init__(self, ensemble: List[ClassifierABC]):
         self.ensemble = ensemble
 
+    @classmethod
+    def __init_subclass__(cls, **kwargs):
+        if hasattr(cls, "NAME"):
+            ALGORITHM_REGISTRY[cls.NAME] = cls
+
     def train(self):
         """
         Trains the ensemble of classifiers by calling the train method

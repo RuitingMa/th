@@ -1,6 +1,6 @@
 no_cuda: False
 dataset: "cifar10"
-ensemble_learning: "bagging"
+ensemble_algorithm: "bagging"
 download_data: True
 ensemble:
     - model:

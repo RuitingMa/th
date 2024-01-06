@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from .xnor_layers import *
 from .model_abc import ModelABC
@@ -6,6 +7,8 @@ __all__ = ["LeNet5"]
 
 
 class LeNet5(nn.Module, ModelABC):
+    """Represents a LeNet5 model."""
+
     TYPE = "lenet5"
 
     def __init__(self, out_classes=10):
@@ -30,21 +33,15 @@ class LeNet5(nn.Module, ModelABC):
             if isinstance(m, nn.BatchNorm2d) or isinstance(m, nn.BatchNorm1d):
                 if hasattr(m.weight, "data"):
                     m.weight.data.zero_().add_(1.0)
-        return
 
     def norm_bn(self):
         for m in self.modules():
             if isinstance(m, nn.BatchNorm2d) or isinstance(m, nn.BatchNorm1d):
                 if hasattr(m.weight, "data"):
                     m.weight.data.clamp_(min=0.01)
-        return
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         self.norm_bn()
         x = self.features(x)
         x = self.classifier(x)
         return x
-
-
-# def lenet5(out_classes=10):
-#     return LeNet5(out_classes)

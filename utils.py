@@ -6,18 +6,16 @@ from classifiers.classifier_abc import ClassifierABC
 
 
 def build_ensemble(
-    ensemble_info: list,
-    device,
-    dataset_name,
-    cuda,
-    download_data,
+    ensemble_info: List[ClassifierABC],
+    device: str,
+    dataset_name: str,
+    cuda: bool,
+    download_data: bool,
 ) -> List[ClassifierABC]:
     """
     Builds the ensemble of classifiers using the config information.
 
-    Returns a dictionary containing the model type as key and a list
-    of models for the key as values. The number of items (models) in the list
-    depends on the value of the count option passed in the config.
+    Returns a list containing the classifiers.
     """
     ensemble = []
     dataset = importlib.import_module("dataloader.{}".format(dataset_name))
