@@ -23,31 +23,3 @@ ensemble = build_ensemble(
 algorithm = AlgorithmABC.from_config(FLAGS.ensemble_algorithm, ensemble)
 algorithm.train()
 algorithm.test()
-
-
-# model_1 = eval(FLAGS.ensemble[0].model.model_type)()
-# print(type(model_1))
-# model_2 = eval(FLAGS.model_2)()
-# model_1.to(device)
-# model_2.to(device)
-
-# # create the ensemble
-# ensemble = Ensemble(
-#     FLAGS.bin_type_1,
-#     FLAGS.bin_type_2,
-#     FLAGS.dataset,
-#     FLAGS.batch_size_1,
-#     FLAGS.batch_size_2,
-#     FLAGS.test_batch_size,
-#     model_1,
-#     model_2,
-#     device,
-#     FLAGS.optimizer,
-#     FLAGS.lr,
-#     FLAGS.steps,
-#     FLAGS.gamma,
-# )
-# # train
-# preds_0 = ensemble.train(FLAGS.checkpoint, FLAGS.epochs_1, FLAGS.epochs_2)
-# # test
-# ensemble.test(preds_0)
