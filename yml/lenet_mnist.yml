@@ -10,11 +10,11 @@ ensemble:
               model_type: "lenet5"
               train_batch_size: 128
               test_batch_size: 100
-              optimizer: "adam"
+              optimizer: "sgd"
               lr: 0.01
               gamma: 0.1
               steps: [80, 150]
-              epochs: 1
+              epochs: 100
               checkpoint: "results/xnor_lenet5"
               train_labels:
                     - all
@@ -25,11 +25,11 @@ ensemble:
               model_type: "lenet_expert"
               train_batch_size: 128
               test_batch_size: 100
-              optimizer: "adam"
-              lr: 0.01
-              gamma: 0.1
-              steps: [80, 150]
-              epochs: 1
+              optimizer: "sgd"
+              lr: 0.001
+              gamma: 0.5
+              steps: [30, 60]
+              epochs: 100
               checkpoint: "results/xnor_expert_lenet"
               train_labels:
                     - [4, 9, 7, 1]

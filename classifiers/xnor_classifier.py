@@ -13,14 +13,16 @@ class XnorClassifier(ClassifierABC):
 
     def __init__(
         self,
+        id: int,
         model_config: ModelConfig,
         data_loaders: DataLoaders,
         train_epochs: Optional[int] = 100,
     ):
-        super().__init__(model_config, data_loaders, train_epochs)
+        super().__init__(id, model_config, data_loaders, train_epochs)
 
     def train_step(self) -> List[float]:
         losses = []
+        top1 = 0
         self.model_config.model.train()
 
         for data, target in tqdm(
@@ -32,6 +34,9 @@ class XnorClassifier(ClassifierABC):
             self.model_config.optimizer.zero_grad()
 
             output = self.model_config.model(data)
+            pred = output.argmax(dim=1, keepdim=True)
+            top1 += pred.eq(target.view_as(pred)).sum().item()
+            top1_acc = 100.0 * top1 / len(self.data_loaders.train_loader.sampler)
             loss = self.model_config.criterion(output, target)
             losses.append(loss.item())
             loss.backward()
@@ -42,4 +47,4 @@ class XnorClassifier(ClassifierABC):
 
             self.model_config.optimizer.step()
 
-        return losses
+        return losses, top1_acc

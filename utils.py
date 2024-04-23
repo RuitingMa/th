@@ -1,6 +1,7 @@
 import importlib
 import os
 from typing import List
+
 from models.model_abc import ModelABC
 from classifiers.classifier_abc import ClassifierABC
 
@@ -19,6 +20,8 @@ def build_ensemble(
     """
     ensemble = []
     dataset = importlib.import_module("dataloader.{}".format(dataset_name))
+    transformation_type_index = 0
+    id = 0
     for model_info in ensemble_info:
         model_type = model_info.model.model_type
         bin_type = model_info.model.bin_type
@@ -40,18 +43,27 @@ def build_ensemble(
                 train_loader = dataset.load_train_data(
                     cuda=cuda, download=download_data, batch_size=train_batch_size
                 )
+                test_loader = dataset.load_test_data(
+                    cuda=cuda,
+                    download=download_data,
+                    batch_size=test_batch_size,
+                )
             else:
                 train_loader = dataset.load_train_data(
                     labels=labels,
                     cuda=cuda,
                     download=download_data,
                     batch_size=train_batch_size,
+                    transformation_type=-1,
                 )
-            test_loader = dataset.load_test_data(
-                cuda=cuda,
-                download=download_data,
-                batch_size=test_batch_size,
-            )
+                test_loader = dataset.load_test_data(
+                    labels=labels,
+                    cuda=cuda,
+                    download=download_data,
+                    batch_size=test_batch_size,
+                    transformation_type=-1,
+                )
+                transformation_type_index += 1
             classifier = ClassifierABC.from_config(
                 bin_type,
                 new_model,
@@ -60,6 +72,7 @@ def build_ensemble(
                 steps,
                 gamma,
                 model_checkpoint,
+                id,
                 labels,
                 epochs,
                 train_loader,
@@ -67,4 +80,5 @@ def build_ensemble(
                 device,
             )
             ensemble.append(classifier)
+            id += 1
     return ensemble

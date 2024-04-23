@@ -1,6 +1,7 @@
 no_cuda: False
 dataset: "cifar10"
-ensemble_algorithm: "bagging"
+ensemble_algorithm: "dynamic_expert_voting"
+download_data: True
 ensemble:
     - model:
           count: 1
@@ -9,31 +10,29 @@ ensemble:
           model_type: "lenet5"
           train_batch_size: 128
           test_batch_size: 100
-          optimizer: "adam"
+          optimizer: "sgd"
           lr: 0.01
           gamma: 0.1
           steps: [80, 150]
-          epochs: 100
-          checkpoint: "results/lenet_cifar10/xnor_lenet5"
+          epochs: 1
+          checkpoint: "results/xnor_lenet5"
           train_labels:
               - all
     - model:
-          count: 6
+          count: 4
           pretrained: null
           bin_type: "xnor"
           model_type: "lenet_expert"
           train_batch_size: 128
           test_batch_size: 100
-          optimizer: "adam"
-          lr: 0.01
-          gamma: 0.1
-          steps: [80, 150]
-          epochs: 100
-          checkpoint: "results/lenet_cifar10/xnor_expert"
+          optimizer: "sgd"
+          lr: 0.001
+          gamma: 0.5
+          steps: [30, 60]
+          epochs: 1
+          checkpoint: "results/xnor_expert_lenet"
           train_labels:
-              - [1, 0, 9, 8]
-              - [8, 0, 5, 2]
-              - [2, 5, 4, 6]
-              - [6, 4, 2, 3, 5]
-              - [7, 2, 4, 3]
-              - [7, 0, 3, 8]
+              - [4, 9, 7, 1]
+              - [5, 8, 3, 2]
+              - [0, 6, 5, 3]
+              - [1, 2, 8, 7]

@@ -22,4 +22,4 @@ ensemble = build_ensemble(
 
 algorithm = AlgorithmABC.from_config(FLAGS.ensemble_algorithm, ensemble)
 algorithm.train()
-algorithm.test()
+algorithm.test(FLAGS.dataset, cuda, FLAGS.download_data, 100)

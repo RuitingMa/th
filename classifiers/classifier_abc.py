@@ -1,6 +1,8 @@
-from typing import ClassVar, Dict, List, Type
+import shutil
+from typing import ClassVar, Dict, List, Type, Tuple
 from abc import ABC, abstractmethod
 import os
+from matplotlib import pyplot as plt
 import numpy as np
 from torch import save, no_grad
 import torch
@@ -16,6 +18,21 @@ CLASSIFIER_REGISTRY: Dict[str, Type["ClassifierABC"]] = {}
 __all__ = ["ClassifierABC", "CLASSIFIER_REGISTRY"]
 
 
+def draw_curve(values, file_name, epochs, ylabel):
+    plt.figure(figsize=(10, 6))
+    plt.plot(
+        [i for i in range(epochs)],
+        values,
+        marker="o",
+        linestyle="-",
+    )
+    plt.title(f"{ylabel} per Epoch")
+    plt.xlabel("Epoch")
+    plt.ylabel(ylabel)
+    plt.grid(True)
+    plt.savefig(f"classifiers/graphs/{file_name}.png")
+
+
 class OptimizerType(Enum):
     ADAM = "adam"
     SGD = "sgd"
@@ -29,7 +46,7 @@ class DataLoaders:
     def __init__(
         self,
         train_loader: torch.utils.data.DataLoader = None,
-        test_loader: torch.utils.data.DataLoader = None,
+        test_loader: List[torch.utils.data.DataLoader] = None,
         labels: List[int] = None,
     ):
         self.train_loader = train_loader
@@ -101,10 +118,12 @@ class ClassifierABC(ABC):
 
     def __init__(
         self,
+        id: int,
         model_config: ModelConfig,
         data_loaders: DataLoaders,
         train_epochs: int = 100,
     ):
+        self.id = id
         self.model_config = model_config
         self.data_loaders = data_loaders
         self.train_epochs = train_epochs
@@ -124,6 +143,7 @@ class ClassifierABC(ABC):
         steps,
         gamma,
         checkpoint,
+        id,
         labels=None,
         train_epochs=100,
         train_loader=None,
@@ -172,6 +192,7 @@ class ClassifierABC(ABC):
         )
 
         return classifier_cls(
+            id=id,
             model_config=model_config,
             data_loaders=data_loaders,
             train_epochs=train_epochs,
@@ -207,7 +228,9 @@ class ClassifierABC(ABC):
                 targets = torch.cat((targets, target), dim=0)
         return targets
 
-    def test(self) -> (float, torch.tensor, torch.tensor):
+    def test(
+        self, dataset: torch.utils.data.DataLoader = None
+    ) -> Tuple[float, torch.tensor, torch.tensor]:
         """
         Tests the classifier on the test data loader and returns the accuracy,
         predictions and confidence scores. For this method to work, the test data
@@ -216,31 +239,33 @@ class ClassifierABC(ABC):
         Returns:
             Accuracy, predicted labels and confidence scores.
         """
-        if self.data_loaders.test_loader is None:
+        if self.data_loaders.test_loader is None and dataset is None:
             raise ValueError(f"test loader for classifier {self} has not been set.")
+        if dataset is None:
+            dataset = self.data_loaders.test_loader
         self.model_config.model.eval()
         top1 = 0
-        test_loss = 0.0
+        test_losses = []
         predictions = torch.tensor([], dtype=torch.int).to(self.model_config.device)
         confidence_scores = torch.tensor([], dtype=torch.float).to(
             self.model_config.device
         )
 
         with no_grad():
-            for data, target in tqdm(self.data_loaders.test_loader):
+            for data, target in tqdm(dataset):
                 data, target = data.to(self.model_config.device), target.to(
                     self.model_config.device
                 )
                 output = self.model_config.model(data)
                 probabilities = F.softmax(output, dim=1)
-                test_loss += self.model_config.criterion(output, target).item()
+                test_losses.append(self.model_config.criterion(output, target).item())
                 pred = output.argmax(dim=1, keepdim=True)
                 top1 += pred.eq(target.view_as(pred)).sum().item()
                 predictions = torch.cat((predictions, pred), dim=0)
                 confidence_scores = torch.cat((confidence_scores, probabilities), dim=0)
 
-        top1_acc = 100.0 * top1 / len(self.data_loaders.test_loader.sampler)
-        return top1_acc, predictions, confidence_scores
+        top1_acc = 100.0 * top1 / len(dataset.sampler)
+        return top1_acc, predictions, confidence_scores, test_losses
 
     @abstractmethod
     def train_step(self) -> List[float]:
@@ -260,22 +285,40 @@ class ClassifierABC(ABC):
         if self.data_loaders.train_loader is None:
             raise ValueError("Train loader has not been specified for {self}.")
 
+        best_accuracy = 0.0
+
         losses = []
+        validation_accuracies = []
+        validation_losses = []
+        running_losses = []
+        running_top1_accuracies = []
 
         for epoch in range(1, self.train_epochs + 1):
             self.model_config.model.train()
-            epoch_losses = self.train_step()
+            epoch_losses, epoch_top1_accuracy = self.train_step()
+            running_top1_accuracies.append(epoch_top1_accuracy)
             losses += epoch_losses
             epoch_losses = np.array(epoch_losses)
+            running_losses.append(epoch_losses.mean())
             lr = self.model_config.optimizer.param_groups[0]["lr"]
+            # validation
+            test_accuracy, _, _, test_losses = self.test()
+            validation_accuracies.append(test_accuracy)
+            test_losses = np.array(test_losses)
+            validation_losses.append(test_losses.mean())
             if self.model_config.scheduler:
                 self.model_config.scheduler.step()
 
+            is_best = test_accuracy > best_accuracy
+            if is_best:
+                best_accuracy = test_accuracy
             print(
-                "Train Epoch {0}\t Loss: {1:.6f} \t lr: {2:.4f}".format(
-                    epoch, epoch_losses.mean(), lr
+                "Train Epoch {0}\t Loss: {1:.6f}\t Test Accuracy {2:.3f} \t lr: {3:.4f}".format(
+                    epoch, epoch_losses.mean(), test_accuracy, lr
                 )
             )
+            print("Best accuracy: {:.3f} ".format(best_accuracy))
+            print()
 
             self.save_checkpoint(
                 {
@@ -286,3 +329,30 @@ class ClassifierABC(ABC):
                 },
                 self.model_config.checkpoint,
             )
+        if os.path.exists("classifiers/graphs") and self.id == 0:
+            shutil.rmtree("classifiers/graphs")
+            os.makedirs("classifiers/graphs")
+        draw_curve(
+            running_top1_accuracies,
+            f"train_top1_accuracies_sgd_model_{self.id}",
+            self.train_epochs,
+            "Accuracy",
+        )
+        draw_curve(
+            running_losses,
+            f"train_losses_sgd_model_{self.id}",
+            self.train_epochs,
+            "Loss",
+        )
+        draw_curve(
+            validation_accuracies,
+            f"valid_top1_accuracies_sgd_model_{self.id}",
+            self.train_epochs,
+            "Accuracy",
+        )
+        draw_curve(
+            validation_losses,
+            f"valid_losses_sgd_model_{self.id}",
+            self.train_epochs,
+            "Loss",
+        )

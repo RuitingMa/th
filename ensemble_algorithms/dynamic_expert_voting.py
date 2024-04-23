@@ -1,3 +1,4 @@
+import importlib
 import torch
 from classifiers.classifier_abc import ClassifierABC
 from .algorithm_abc import AlgorithmABC
@@ -9,21 +10,37 @@ class DynamicExpertVoting(AlgorithmABC):
     def __init__(self, ensemble: ClassifierABC):
         super().__init__(ensemble)
 
-    def test(self):
+    def test(
+        self, dataset_name: str, cuda: bool, download_data: bool, test_batch_size: int
+    ):
         """
         Tests and predicts labels using dynamic expert voting.
         """
         print()
         print("Started ensemble testing")
+        dataset = importlib.import_module("dataloader.{}".format(dataset_name))
+        test_loader = dataset.load_test_data(
+            cuda=cuda,
+            download=download_data,
+            batch_size=test_batch_size,
+        )
         # TODO: assuming that the first classifier is trained on all labels (ie meta classifier)
-        accuracy, _, meta_confidence_scores = self.ensemble[0].test()
+        accuracy, _, meta_confidence_scores, _ = self.ensemble[0].test(test_loader)
         print(f"meta classifier accuracy: {accuracy}")
         ensemble_predictions = torch.empty((0,))
         expert_confidence_scores = {}
+        expert_member_index = 0
         for member in self.ensemble[1:]:
-            accuracy, _, expert_confidence_score = member.test()
+            test_loader = dataset.load_test_data(
+                cuda=cuda,
+                download=download_data,
+                batch_size=test_batch_size,
+                transformation_type=-1,
+            )
+            accuracy, _, expert_confidence_score, _ = member.test(test_loader)
             expert_confidence_scores[member] = expert_confidence_score
             print(f"expert member accuracy: {accuracy}")
+            expert_member_index += 1
 
         for i, row in enumerate(meta_confidence_scores):
             possible_classes = torch.where(row > 0.15)[0].tolist()

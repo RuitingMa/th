@@ -48,7 +48,9 @@ class AlgorithmABC(ABC):
         return 100 * ((predictions == targets).sum().item() / len(targets))
 
     @abstractmethod
-    def test(self):
+    def test(
+        self, dataset_name: str, cuda: bool, download_data: bool, test_batch_size: int
+    ):
         """
         Implements the method used by the ensemble to test the system
         and predict labels. The final predictions are inferred by
