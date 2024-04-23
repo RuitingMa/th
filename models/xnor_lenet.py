@@ -14,16 +14,16 @@ class LeNet5(nn.Module, ModelABC):
     def __init__(self, out_classes=10):
         super(LeNet5, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(1, 20, kernel_size=5, stride=1),
-            nn.BatchNorm2d(20, eps=1e-4, momentum=0.1, affine=False),
+            nn.Conv2d(3, 32, kernel_size=5, stride=1, padding=2),
+            nn.BatchNorm2d(32, eps=1e-4, momentum=0.1, affine=False),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            XNORConv2d(20, 50, kernel_size=5, stride=1, padding=0),
+            XNORConv2d(32, 64, kernel_size=5, stride=1, padding=2),
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Flatten(),
         )
         self.classifier = nn.Sequential(
-            BNLinearReLU(800, 500),
+            BNLinearReLU(4096, 500),
             nn.BatchNorm1d(500, eps=1e-4, momentum=0.1, affine=False),
             nn.Linear(500, out_classes),
         )

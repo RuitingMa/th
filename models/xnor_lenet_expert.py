@@ -14,7 +14,7 @@ class LeNetExpert(nn.Module, ModelABC):
     def __init__(self, out_classes=10):
         super(LeNetExpert, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(1, 10, kernel_size=5, stride=1),  # 3,5
+            nn.Conv2d(3, 10, kernel_size=5, stride=1),  # 3,5
             nn.BatchNorm2d(10, eps=1e-4, momentum=0.1, affine=False),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),

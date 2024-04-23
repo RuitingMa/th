@@ -60,7 +60,7 @@ def load_train_data(
         shuffle = True
     else:
         shuffle = False
-    if labels is not None:
+    if labels is None:
         transform = tvt.Compose(
             [
                 tvt.RandomCrop(32, padding=4),
