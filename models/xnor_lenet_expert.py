@@ -14,16 +14,16 @@ class LeNetExpert(nn.Module, ModelABC):
     def __init__(self, out_classes=10):
         super(LeNetExpert, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(3, 10, kernel_size=5, stride=1),  # 3,5
-            nn.BatchNorm2d(10, eps=1e-4, momentum=0.1, affine=False),
+            nn.Conv2d(3, 16, kernel_size=5, stride=1, padding=2),
+            nn.BatchNorm2d(16, eps=1e-4, momentum=0.1, affine=False),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            XNORConv2d(10, 25, kernel_size=5, stride=1, padding=0),
+            XNORConv2d(16, 32, kernel_size=5, stride=1, padding=2),
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Flatten(),
         )
         self.classifier = nn.Sequential(
-            BNLinearReLU(400, 250),  # 250, 50
+            BNLinearReLU(2048, 250),
             nn.BatchNorm1d(250, eps=1e-4, momentum=0.1, affine=False),
             nn.Linear(250, out_classes),
         )
