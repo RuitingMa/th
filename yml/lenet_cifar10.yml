@@ -19,7 +19,7 @@ ensemble:
           train_labels:
               - all
     - model:
-          count: 4
+          count: 6
           pretrained: null
           bin_type: "xnor"
           model_type: "lenet_expert"
@@ -32,7 +32,9 @@ ensemble:
           epochs: 1
           checkpoint: "results/xnor_expert_lenet"
           train_labels:
-              - [4, 9, 7, 1]
-              - [5, 8, 3, 2]
-              - [0, 6, 5, 3]
-              - [1, 2, 8, 7]
+              - [1, 0, 9, 8]
+              - [8, 0, 5, 2]
+              - [2, 5, 4, 6]
+              - [6, 4, 2, 3, 5]
+              - [7, 2, 4, 3]
+              - [7, 0, 3, 8]
