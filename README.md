@@ -2,8 +2,7 @@
 
 
 ### Description 
-Implemented based on Luca Mocerino's [Binary-Neural-Networks-PyTorch-1.0](https://github.com/lucamocerino/Binary-Neural-Networks-PyTorch-1.0), this repository implements the proposed design in my Honours project.
-
+Implemented based off of Luca Mocerino's [Binary-Neural-Networks-PyTorch-1.0](https://github.com/lucamocerino/Binary-Neural-Networks-PyTorch-1.0), this repository implements the proposed design in my Honours project.
 
 
 The project is organized as follows:
@@ -13,7 +12,8 @@ The project is organized as follows:
   - **models/{type}_layers.py** contains the binarylayers implementation (binary activation, binary conv and fully-connected layers, gradient update);  where type = {bnn, xnor, dorefa}
   - **yml** folder contains configuration files with hyperparameters
   - **main.py** represents the entry file
-  - **ensemble_algorithms** this folder contains the different ensemble training/testing algorithms that I experimented with, inclusing the main one, dynamic expert voting
+  - **ensemble_algorithms** this folder contains the different ensemble training/testing algorithms that I experimented with, inclusing the main one, dynamic expert voting  
+At the end of the training process, each member's loss and accuracy per epoch graphs are saved at `classifiers/graphs`. This folder is not tracked by git and gets re-written every time the training process is run so ensure that you save them at a permanent location before running any new experiments.
 ### Installation
 
 All packages are in *requirement.txt*
