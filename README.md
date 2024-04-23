@@ -13,10 +13,7 @@ The project is organized as follows:
   - **models/{type}_layers.py** contains the binarylayers implementation (binary activation, binary conv and fully-connected layers, gradient update);  where type = {bnn, xnor, dorefa}
   - **yml** folder contains configuration files with hyperparameters
   - **main.py** represents the entry file
-  - **ensemble.py** represents the implementation of the proposed ensemble, containing its test and training procedures
-  - **BENN.py** represents the ensemble voting algorithms described in the thesis treaty which were used to unify the individual votes of the members.
-
-Please note that so far, only XNOR-LeNet and XNOR-NiN on MNIST and CIFAR-10 have been modified for integration in the ensmeble. Other model architectures have been left in the repository for integration in the future.
+  - **ensemble_algorithms** this folder contains the different ensemble training/testing algorithms that I experimented with, inclusing the main one, dynamic expert voting
 ### Installation
 
 All packages are in *requirement.txt*
