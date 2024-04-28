@@ -54,14 +54,14 @@ def build_ensemble(
                     cuda=cuda,
                     download=download_data,
                     batch_size=train_batch_size,
-                    transformation_type=-1,
+                    transformation_type=transformation_type_index,
                 )
                 test_loader = dataset.load_test_data(
                     labels=labels,
                     cuda=cuda,
                     download=download_data,
                     batch_size=test_batch_size,
-                    transformation_type=-1,
+                    transformation_type=transformation_type_index,
                 )
                 transformation_type_index += 1
             classifier = ClassifierABC.from_config(

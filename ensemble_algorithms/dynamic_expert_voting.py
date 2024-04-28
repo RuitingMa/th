@@ -35,7 +35,7 @@ class DynamicExpertVoting(AlgorithmABC):
                 cuda=cuda,
                 download=download_data,
                 batch_size=test_batch_size,
-                transformation_type=-1,
+                transformation_type=expert_member_index,
             )
             accuracy, _, expert_confidence_score, _ = member.test(test_loader)
             expert_confidence_scores[member] = expert_confidence_score
