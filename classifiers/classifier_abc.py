@@ -31,6 +31,7 @@ def draw_curve(values, file_name, epochs, ylabel):
     plt.ylabel(ylabel)
     plt.grid(True)
     plt.savefig(f"classifiers/graphs/{file_name}.png")
+    plt.close()
 
 
 class OptimizerType(Enum):

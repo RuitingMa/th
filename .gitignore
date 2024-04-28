@@ -4,3 +4,4 @@ datasets/*
 .vscode/
 results/
 classifiers/graphs/
+classifiers/outputs/

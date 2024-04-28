@@ -35,14 +35,19 @@ class DynamicExpertVoting(AlgorithmABC):
                 cuda=cuda,
                 download=download_data,
                 batch_size=test_batch_size,
-                transformation_type=expert_member_index,
+                transformation_type=-1,
             )
             accuracy, _, expert_confidence_score, _ = member.test(test_loader)
             expert_confidence_scores[member] = expert_confidence_score
             print(f"expert member accuracy: {accuracy}")
             expert_member_index += 1
 
+        targets = self.ensemble[0].get_targets()
+        f = open("classifiers/outputs/confidence_scores.txt", "w")
         for i, row in enumerate(meta_confidence_scores):
+            f.write("Data point: {}\n".format(i + 1))
+            f.write("Model 0:\n")
+            f.write("confidence score: {}\n".format(row))
             possible_classes = torch.where(row > 0.15)[0].tolist()
             if len(possible_classes) == 0:
                 print(
@@ -51,11 +56,14 @@ class DynamicExpertVoting(AlgorithmABC):
                 possible_class = torch.argmax(row).item()
                 possible_classes = [possible_class]
             member_count = 0
-            for member in self.ensemble[1:]:
+            for index, member in enumerate(self.ensemble[1:]):
                 if any(
                     digit in member.data_loaders.labels for digit in possible_classes
                 ):
+                    f.write("Model {}:\n".format(index + 1))
+                    f.write("Labels: {}\n".format(member.data_loaders.labels))
                     expert_confidence_score = expert_confidence_scores[member][i]
+                    f.write("confidence score: {}\n".format(expert_confidence_score))
                     if member_count == 0:
                         sum_squared_confidence_scores = torch.zeros_like(
                             expert_confidence_score
@@ -65,11 +73,23 @@ class DynamicExpertVoting(AlgorithmABC):
             mean_squared_confidence_scores = (
                 sum_squared_confidence_scores / member_count
             )
+            f.write(
+                "Mean squared confidence score: {}\n".format(
+                    mean_squared_confidence_scores
+                )
+            )
             average_squared_confidence_vote = torch.argmax(
                 mean_squared_confidence_scores
             )
+            f.write("Ensemble vote: {}\n".format(average_squared_confidence_vote))
             ensemble_predictions = torch.cat(
                 (ensemble_predictions, average_squared_confidence_vote.unsqueeze(0))
             )
+            f.write("Labels: {}\n".format(targets[i]))
+            f.write("\n")
+        f.close()
+
         accuracy = self.get_accuracy(ensemble_predictions)
         print(f"dynamic expoert vote accuracy: {accuracy}")
+
+        self.draw_test_result_by_class(ensemble_predictions, 10)

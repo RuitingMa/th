@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import ClassVar, Dict, List, Type
 
+from matplotlib import pyplot as plt
+
 from classifiers.classifier_abc import ClassifierABC
 
 ALGORITHM_REGISTRY: Dict[str, Type["AlgorithmABC"]] = {}
@@ -73,6 +75,33 @@ class AlgorithmABC(ABC):
 
         return ensemble_algorithm_cls(ensemble)
 
-    # @abstractmethod
-    # def predict(ensemble):
-    #     raise NotImplementedError
+    def draw_test_result_by_class(
+        self, ensemble_predictions: List[int], target_length: int
+    ):
+        targets = self.ensemble[0].get_targets()
+        incorrect_predictions = [0] * target_length
+        correct_predictions = [0] * target_length
+        for i in range(len(targets)):
+            if targets[i] != ensemble_predictions[i]:
+                incorrect_predictions[targets[i]] += 1
+            else:
+                correct_predictions[targets[i]] += 1
+        # correct predictions
+        plt.figure(figsize=(10, 6))
+        plt.bar(range(target_length), correct_predictions, color="maroon", width=0.4)
+        plt.xlabel("Classes")
+        plt.ylabel("No. of correctly classified")
+        plt.title("# of correctly classified per class")
+        plt.grid(True)
+        plt.savefig(f"classifiers/graphs/correct_classification.png")
+        plt.close()
+
+        # incorrect predictions
+        plt.figure(figsize=(10, 6))
+        plt.bar(range(target_length), incorrect_predictions, color="maroon", width=0.4)
+        plt.xlabel("Classes")
+        plt.ylabel("No. of oncorrectly classified")
+        plt.title("# of incorrectly classified per class")
+        plt.grid(True)
+        plt.savefig(f"classifiers/graphs/incorrect_classification.png")
+        plt.close()
