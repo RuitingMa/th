@@ -79,29 +79,39 @@ class AlgorithmABC(ABC):
         self, ensemble_predictions: List[int], target_length: int
     ):
         targets = self.ensemble[0].get_targets()
-        incorrect_predictions = [0] * target_length
-        correct_predictions = [0] * target_length
+        incorrect_predictions_count = [0] * target_length
+        correct_predictions_count = [0] * target_length
+        total_count = [0] * target_length
         for i in range(len(targets)):
+            total_count[targets[i]] += 1
             if targets[i] != ensemble_predictions[i]:
-                incorrect_predictions[targets[i]] += 1
+                incorrect_predictions_count[targets[i]] += 1
             else:
-                correct_predictions[targets[i]] += 1
+                correct_predictions_count[targets[i]] += 1
         # correct predictions
+        correct_predictions = [
+            correct_predictions_count[i] * 100 / total_count[i]
+            for i in range(len(correct_predictions_count))
+        ]
         plt.figure(figsize=(10, 6))
         plt.bar(range(target_length), correct_predictions, color="maroon", width=0.4)
         plt.xlabel("Classes")
-        plt.ylabel("No. of correctly classified")
-        plt.title("# of correctly classified per class")
+        plt.ylabel("Percentage of correctly classified")
+        plt.title("Percentage of correctly classified per class")
         plt.grid(True)
         plt.savefig(f"classifiers/graphs/correct_classification.png")
         plt.close()
 
         # incorrect predictions
+        incorrect_predictions = [
+            incorrect_predictions_count[i] * 100 / total_count[i]
+            for i in range(len(incorrect_predictions_count))
+        ]
         plt.figure(figsize=(10, 6))
         plt.bar(range(target_length), incorrect_predictions, color="maroon", width=0.4)
         plt.xlabel("Classes")
-        plt.ylabel("No. of oncorrectly classified")
-        plt.title("# of incorrectly classified per class")
+        plt.ylabel("Percentage of oncorrectly classified")
+        plt.title("Percentage of incorrectly classified per class")
         plt.grid(True)
         plt.savefig(f"classifiers/graphs/incorrect_classification.png")
         plt.close()
