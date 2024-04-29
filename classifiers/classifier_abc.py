@@ -30,7 +30,13 @@ def draw_curve(values, file_name, epochs, ylabel):
     plt.xlabel("Epoch")
     plt.ylabel(ylabel)
     plt.grid(True)
-    plt.savefig(f"classifiers/graphs/{file_name}.png")
+    
+    # 确保目录存在
+    directory = f"E:/Thesis/Code/honours-thesis/classifiers/graphs"
+    os.makedirs(directory, exist_ok=True)  # 创建目录，如果目录已存在，则不抛出错误
+
+    # 保存图像
+    plt.savefig(f"{directory}/{file_name}.png")
     plt.close()
 
 

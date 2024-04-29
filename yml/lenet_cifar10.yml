@@ -14,7 +14,7 @@ ensemble:
           lr: 0.01
           gamma: 0.1
           steps: [30, 60]
-          epochs: 100
+          epochs: 20
           checkpoint: "results/xnor_lenet5"
           train_labels:
               - all
@@ -29,7 +29,7 @@ ensemble:
           lr: 0.001
           gamma: 0.5
           steps: [30, 60]
-          epochs: 100
+          epochs: 20
           checkpoint: "results/xnor_expert_lenet"
           train_labels:
               - [1, 0, 9, 8]
