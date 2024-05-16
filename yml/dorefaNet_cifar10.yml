@@ -1,0 +1,37 @@
+no_cuda: False
+dataset: "cifar10"
+ensemble_algorithm: "dynamic_expert_voting"
+download_data: True
+ensemble:
+    - model:
+          count: 1
+          pretrained: null
+          bin_type: "dorefa"
+          model_type: "resnet18"
+          train_batch_size: 32
+          test_batch_size: 50
+          optimizer: "sgd"
+          lr: 0.01
+          gamma: 0.1
+          steps: [30, 60, 90]
+          epochs: 5
+          checkpoint: "results/dorefa_resnet"
+          train_labels:
+              - all
+    - model:
+          count: 3
+          pretrained: null
+          bin_type: "dorefa"
+          model_type: "resnet_expert"
+          train_batch_size: 32
+          test_batch_size: 50
+          optimizer: "sgd"
+          lr: 0.001
+          gamma: 0.5
+          steps: [30, 60, 90]
+          epochs: 5
+          checkpoint: "comprehensive"
+          train_labels:
+              - [0, 1, 2, 3]
+              - [4, 5, 6, 7]
+              - [8, 9]

@@ -182,6 +182,7 @@ class ClassifierABC(ABC):
             classifier_cls = CLASSIFIER_REGISTRY[name]
         except KeyError:
             raise ValueError(f"{name} is not the name of a valid classifier type.")
+        
         model_config = ModelConfig(
             model=model,
             optimizer=OptimizerType(optimizer),
@@ -197,6 +198,7 @@ class ClassifierABC(ABC):
             test_loader=test_loader,
             labels=labels,
         )
+
 
         return classifier_cls(
             id=id,
